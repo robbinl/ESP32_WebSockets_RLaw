@@ -21,8 +21,6 @@ Led    led         = { LED_PIN, false };
 void setup() {
     pinMode(onboard_led.pin, OUTPUT);
     pinMode(led.pin,         OUTPUT);
-
-    Serial.begin(9600); delay(500);
 }
 
 void loop() {
