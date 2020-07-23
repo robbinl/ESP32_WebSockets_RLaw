@@ -71,6 +71,9 @@ void initSPIFFS() {
         onboard_led.update();
     }
   }
+  else{
+    Serial.println("SPIFFS volume mounted properly");
+  }
 }
 
 void setup() {
