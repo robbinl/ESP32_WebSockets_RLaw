@@ -6,6 +6,8 @@
 #define BTN1_PIN   16
 #define LED2_PIN   26
 #define BTN2_PIN   17
+
+
 //try again revert
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
@@ -55,6 +57,13 @@ struct Button {
     }
 };
 
+// Global Variables
+Led    onboard_led = { LED_ONBOARD_PIN, false };
+Led    led1        = { LED1_PIN, false };
+Button button1      = { BTN1_PIN, HIGH, 0, 0 };
+Led    led2        = { LED2_PIN, false };
+Button button2      = { BTN2_PIN, HIGH, 0, 0 };
+
 // SPIFFS
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
@@ -65,13 +74,6 @@ void initSPIFFS() {
     }
   }
 }
-
-// Global Variables
-Led    onboard_led = { LED_ONBOARD_PIN, false };
-Led    led1        = { LED1_PIN, false };
-Button button1      = { BTN1_PIN, HIGH, 0, 0 };
-Led    led2        = { LED2_PIN, false };
-Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
