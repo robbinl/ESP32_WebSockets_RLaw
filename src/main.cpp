@@ -80,6 +80,6 @@ void loop() {
     else if (button2.released()) led2.on = false;
     led1.update();
     led2.update();
-    onboard_led.on = millis() % 1000 < 50;
+    onboard_led.on = millis() % 1000 < 500;
     onboard_led.update();
 }
