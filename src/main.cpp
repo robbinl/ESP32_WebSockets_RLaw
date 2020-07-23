@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SPIFFS.h>
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
@@ -54,6 +55,17 @@ struct Button {
     }
 };
 
+// SPIFFS
+void initSPIFFS() {
+  if (!SPIFFS.begin()) {
+    Serial.println("Cannot mount SPIFFS volume...");
+    while (1) {
+        onboard_led.on = millis() % 200 < 50;
+        onboard_led.update();
+    }
+  }
+}
+
 // Global Variables
 Led    onboard_led = { LED_ONBOARD_PIN, false };
 Led    led1        = { LED1_PIN, false };
@@ -67,6 +79,9 @@ void setup() {
     pinMode(button1.pin,      INPUT);
     pinMode(led2.pin,         OUTPUT);
     pinMode(button2.pin,      INPUT);
+
+    Serial.begin(9600); delay(500);
+    initSPIFFS();
 
 }
 
