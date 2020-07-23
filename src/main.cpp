@@ -6,7 +6,7 @@
 #define BTN1_PIN   16
 #define LED2_PIN   26
 #define BTN2_PIN   17
-
+//
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
 // LED
