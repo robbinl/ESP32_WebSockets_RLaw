@@ -1,32 +1,85 @@
 #include <Arduino.h>
 
 #define LED_ONBOARD_PIN   2
-#define LED_PIN   25
-#define BTN_PIN   16
+#define LED1_PIN   25
+#define BTN1_PIN   16
+#define LED2_PIN   26
+#define BTN2_PIN   17
 
+const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
+
+// LED
 struct Led {
-    // state variables
     uint8_t pin;
     bool    on;
 
-    // methods
     void update() {
         digitalWrite(pin, on ? HIGH : LOW);
     }
 };
 
+// Button
+struct Button {
+    uint8_t  pin;
+    bool     lastReading;
+    uint32_t lastDebounceTime;
+    uint16_t state;
+
+    bool pressed()                { return state == 1; }
+    bool released()               { return state == 0xffff; }
+    bool held(uint16_t count = 0) { return state > 1 + count && state < 0xffff; }
+
+    void read() {
+        bool reading = digitalRead(pin);
+
+        // if the logic level has changed since the last reading
+        // reset lastDebounceTime to now
+        if (reading != lastReading) {
+            lastDebounceTime = millis();
+        }
+
+        // after out of the bouncing phase
+        // the actual status of the button is determined
+        if (millis() - lastDebounceTime > DEBOUNCE_DELAY) {
+            // the pin is pulled up when not pressed
+            bool pressed = reading == LOW;
+            if (pressed) {
+                     if (state  < 0xfffe) state++;
+                else if (state == 0xfffe) state = 2;
+            } else if (state) {
+                state = state == 0xffff ? 0 : 0xffff;
+            }
+        }
+        lastReading = reading;
+    }
+};
+
+// Global Variables
 Led    onboard_led = { LED_ONBOARD_PIN, false };
-Led    led         = { LED_PIN, false };
+Led    led1        = { LED1_PIN, false };
+Button button1      = { BTN1_PIN, HIGH, 0, 0 };
+Led    led2        = { LED2_PIN, false };
+Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 void setup() {
-    pinMode(onboard_led.pin, OUTPUT);
-    pinMode(led.pin,         OUTPUT);
+    pinMode(onboard_led.pin,  OUTPUT);
+    pinMode(led1.pin,         OUTPUT);
+    pinMode(button1.pin,      INPUT);
+    pinMode(led2.pin,         OUTPUT);
+    pinMode(button2.pin,      INPUT);
+
 }
 
 void loop() {
-    onboard_led.on = millis() % 2000 < 50;
-    led.on = millis() % 1000 < 50;
-
-    led.update();
+    button1.read();
+    if (button1.pressed()) {
+        led1.on = !led1.on;
+    }
+    button2.read();
+         if (button2.held())     led2.on = true;
+    else if (button2.released()) led2.on = false;
+    led1.update();
+    led2.update();
+    onboard_led.on = millis() % 1000 < 50;
     onboard_led.update();
 }
