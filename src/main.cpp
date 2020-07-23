@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
+#include <FS.h>
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
