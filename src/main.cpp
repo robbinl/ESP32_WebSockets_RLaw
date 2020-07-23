@@ -55,6 +55,13 @@ struct Button {
     }
 };
 
+// Global Variables
+Led    onboard_led = { LED_ONBOARD_PIN, false };
+Led    led1        = { LED1_PIN, false };
+Button button1      = { BTN1_PIN, HIGH, 0, 0 };
+Led    led2        = { LED2_PIN, false };
+Button button2      = { BTN2_PIN, HIGH, 0, 0 };
+
 // SPIFFS
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
@@ -65,13 +72,6 @@ void initSPIFFS() {
     }
   }
 }
-
-// Global Variables
-Led    onboard_led = { LED_ONBOARD_PIN, false };
-Led    led1        = { LED1_PIN, false };
-Button button1      = { BTN1_PIN, HIGH, 0, 0 };
-Led    led2        = { LED2_PIN, false };
-Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
@@ -95,6 +95,4 @@ void loop() {
     else if (button2.released()) led2.on = false;
     led1.update();
     led2.update();
-    onboard_led.on = millis() % 1000 < 50;
-    onboard_led.update();
 }
