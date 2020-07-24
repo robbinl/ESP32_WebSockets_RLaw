@@ -66,7 +66,8 @@ Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");
-    while (1) {
+    //while (1) 
+    {
         onboard_led.on = millis() % 200 < 50;
         onboard_led.update();
     }
