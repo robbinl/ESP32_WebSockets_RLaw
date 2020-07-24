@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
+#include <ESPAsyncWebServer.h> // we need this lib in platformio.ini
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
 #define BTN1_PIN   16
 #define LED2_PIN   26
 #define BTN2_PIN   17
+#define HTTP_PORT 80 // Web Server Setup
 
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
@@ -66,6 +68,8 @@ Led    led1        = { LED1_PIN, false };
 Button button1      = { BTN1_PIN, HIGH, 0, 0 };
 Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
+
+AsyncWebServer server(HTTP_PORT);
 
 // SPIFFS
 void initSPIFFS() {
