@@ -8,6 +8,8 @@
 #define LED2_PIN   26
 #define BTN2_PIN   17
 
+
+//try again revert
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
 // LED
@@ -71,6 +73,9 @@ void initSPIFFS() {
         onboard_led.on = millis() % 200 < 50;
         onboard_led.update();
     }
+  }
+  else{
+    Serial.println("SPIFFS volume mounted properly");
   }
 }
 
