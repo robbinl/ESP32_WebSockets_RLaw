@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
+#include <FS.h>
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
@@ -7,6 +8,8 @@
 #define LED2_PIN   26
 #define BTN2_PIN   17
 
+
+//try again revert
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
 // LED
@@ -99,4 +102,6 @@ void loop() {
     else if (button2.released()) led2.on = false;
     led1.update();
     led2.update();
+    onboard_led.on = millis() % 1000 < 50;
+    onboard_led.update();
 }
