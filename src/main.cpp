@@ -97,6 +97,22 @@ void initWiFi() {
   Serial.printf(" %s\n", WiFi.localIP().toString().c_str());
 }
 
+// Web Server Setup
+String processor(const String &var) {
+    return String(var == "STATE" && led1.on ? "on" : "off");
+}
+
+void onRootRequest(AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/index.html", "text/html", false, processor);
+}
+
+void initWebServer() {
+    server.on("/", onRootRequest);
+    //server.serveStatic("/", SPIFFS, "/");
+    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    server.begin();
+}
+
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
     pinMode(led1.pin,         OUTPUT);
@@ -107,6 +123,7 @@ void setup() {
     Serial.begin(9600); delay(500);
     initSPIFFS();
     initWiFi();
+    initWebServer();
 
 }
 
