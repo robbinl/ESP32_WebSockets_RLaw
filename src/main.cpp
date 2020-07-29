@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
+#include <ESPAsyncWebServer.h> // we need this lib in platformio.ini
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
 #define BTN1_PIN   16
 #define LED2_PIN   26
 #define BTN2_PIN   17
+#define HTTP_PORT 80 // Web Server Setup
 
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
@@ -67,6 +69,9 @@ Button button1      = { BTN1_PIN, HIGH, 0, 0 };
 Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
+AsyncWebServer server(HTTP_PORT);
+AsyncWebSocket ws("/ws");
+
 // SPIFFS
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
@@ -93,6 +98,50 @@ void initWiFi() {
   Serial.printf(" %s\n", WiFi.localIP().toString().c_str());
 }
 
+// Web Server Setup
+String processor(const String& var)
+{
+  if(var == "STATE")
+    return (led1.on ? "on" : "off");
+  return String();
+}
+
+void onRootRequest(AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/index.html", "text/html", false, processor);
+}
+
+void initWebServer() {
+    server.on("/", onRootRequest);
+    server.serveStatic("/", SPIFFS, "/");
+    server.begin();
+}
+
+// Web Socket Setup
+void onEvent(AsyncWebSocket       *server,  //
+             AsyncWebSocketClient *client,  //
+             AwsEventType          type,    // the signature of this function is defined
+             void                 *arg,     // by the `AwsEventHandler` interface
+             uint8_t              *data,    //
+             size_t                len) {   //
+
+    switch (type) {
+        case WS_EVT_CONNECT:
+            Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+            break;
+        case WS_EVT_DISCONNECT:
+            Serial.printf("WebSocket client #%u disconnected\n", client->id());
+            break;
+        case WS_EVT_DATA:
+        case WS_EVT_PONG:
+        case WS_EVT_ERROR:
+            break;
+    }
+}
+void initWebSocket() {
+    ws.onEvent(onEvent);
+    server.addHandler(&ws);
+}
+
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
     pinMode(led1.pin,         OUTPUT);
@@ -103,10 +152,13 @@ void setup() {
     Serial.begin(9600); delay(500);
     initSPIFFS();
     initWiFi();
+    initWebSocket();
+    initWebServer();
 
 }
 
 void loop() {
+    ws.cleanupClients();
     button1.read();
     if (button1.pressed()) {
         led1.on = !led1.on;
