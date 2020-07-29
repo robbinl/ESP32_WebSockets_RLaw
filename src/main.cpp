@@ -14,7 +14,7 @@ const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 
 // WiFi credentials
 const char *WIFI_SSID = "OldRob";
-const char *WIFI_PASS = "857qw442RT";
+const char *WIFI_PASS = "5223qaz7542PLM";
 
 // LED
 struct Led {
