@@ -105,20 +105,13 @@ String processor(const String& var)
   return String();
 }
 
-//String processor(const String &var) {
-//    return String(var == "STATE" && led1.on ? "on" : "off");
-//}
-
 void onRootRequest(AsyncWebServerRequest *request) {
-    //request->send(404); //Sends 404 File Not Found
-    //request->send(200, "text/plain", "Hello World!");
     request->send(SPIFFS, "/index.html", "text/html", false, processor);
 }
 
 void initWebServer() {
     server.on("/", onRootRequest);
-    //server.serveStatic("/", SPIFFS, "/");
-    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    server.serveStatic("/", SPIFFS, "/");
     server.begin();
 }
 
