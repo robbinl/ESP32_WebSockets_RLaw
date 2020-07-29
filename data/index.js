@@ -27,4 +27,5 @@ function onClose(event) {
 function onMessage(event) {
     console.log(`Received a notification from ${event.origin}`);
     console.log(event);
+    document.getElementById('led').className = event.data;
 }
