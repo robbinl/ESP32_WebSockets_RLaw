@@ -142,6 +142,10 @@ void initWebSocket() {
     server.addHandler(&ws);
 }
 
+// Data Exchange
+void notifyClients() {
+    ws.textAll(led1.on ? "on" : "off");
+}
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
     pinMode(led1.pin,         OUTPUT);
@@ -162,6 +166,7 @@ void loop() {
     button1.read();
     if (button1.pressed()) {
         led1.on = !led1.on;
+        notifyClients();
     }
     button2.read();
          if (button2.held())     led2.on = true;

@@ -12,6 +12,7 @@ function initWebSocket() {
     websocket = new WebSocket(gateway);
     websocket.onopen  = onOpen;
     websocket.onclose = onClose;
+    websocket.onmessage = onMessage;
 }
 
 function onOpen(event) {
@@ -21,4 +22,9 @@ function onOpen(event) {
 function onClose(event) {
     console.log('Connection closed');
     setTimeout(initWebSocket, 2000);
+}
+
+function onMessage(event) {
+    console.log(`Received a notification from ${event.origin}`);
+    console.log(event);
 }
