@@ -158,6 +158,7 @@ void setup() {
 }
 
 void loop() {
+    ws.cleanupClients();
     button1.read();
     if (button1.pressed()) {
         led1.on = !led1.on;
