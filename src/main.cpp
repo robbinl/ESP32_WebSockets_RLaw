@@ -102,7 +102,7 @@ String processor(const String& var)
 {
   if(var == "STATE")
     return (led1.on ? "on" : "off");
-  return String();
+  return String(); // Empty string
 }
 
 void onRootRequest(AsyncWebServerRequest *request) {
@@ -113,8 +113,7 @@ void onRootRequest(AsyncWebServerRequest *request) {
 
 void initWebServer() {
     server.on("/", onRootRequest);
-    //server.serveStatic("/", SPIFFS, "/");
-    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    server.serveStatic("/", SPIFFS, "/");
     server.begin();
 }
 
