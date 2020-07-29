@@ -70,6 +70,7 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 AsyncWebServer server(HTTP_PORT);
+AsyncWebSocket ws("/ws");
 
 // SPIFFS
 void initSPIFFS() {
@@ -98,19 +99,47 @@ void initWiFi() {
 }
 
 // Web Server Setup
-String processor(const String &var) {
-    return String(var == "STATE" && led1.on ? "on" : "off");
+String processor(const String& var)
+{
+  if(var == "STATE")
+    return (led1.on ? "on" : "off");
+  return String();
 }
 
 void onRootRequest(AsyncWebServerRequest *request) {
-  request->send(SPIFFS, "/index.html", "text/html", false, processor);
+    request->send(SPIFFS, "/index.html", "text/html", false, processor);
 }
 
 void initWebServer() {
     server.on("/", onRootRequest);
-    //server.serveStatic("/", SPIFFS, "/");
-    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    server.serveStatic("/", SPIFFS, "/");
     server.begin();
+}
+
+// Web Socket Setup
+void onEvent(AsyncWebSocket       *server,  //
+             AsyncWebSocketClient *client,  //
+             AwsEventType          type,    // the signature of this function is defined
+             void                 *arg,     // by the `AwsEventHandler` interface
+             uint8_t              *data,    //
+             size_t                len) {   //
+
+    switch (type) {
+        case WS_EVT_CONNECT:
+            Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+            break;
+        case WS_EVT_DISCONNECT:
+            Serial.printf("WebSocket client #%u disconnected\n", client->id());
+            break;
+        case WS_EVT_DATA:
+        case WS_EVT_PONG:
+        case WS_EVT_ERROR:
+            break;
+    }
+}
+void initWebSocket() {
+    ws.onEvent(onEvent);
+    server.addHandler(&ws);
 }
 
 void setup() {
@@ -123,11 +152,13 @@ void setup() {
     Serial.begin(9600); delay(500);
     initSPIFFS();
     initWiFi();
+    initWebSocket();
     initWebServer();
 
 }
 
 void loop() {
+    ws.cleanupClients();
     button1.read();
     if (button1.pressed()) {
         led1.on = !led1.on;
