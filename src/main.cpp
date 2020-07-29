@@ -98,12 +98,17 @@ void initWiFi() {
 }
 
 // Web Server Setup
-String processor(const String &var) {
-    return String(var == "STATE" && led1.on ? "on" : "off");
+String processor(const String& var)
+{
+  if(var == "STATE")
+    return (led1.on ? "on" : "off");
+  return String();
 }
 
 void onRootRequest(AsyncWebServerRequest *request) {
-  request->send(SPIFFS, "/index.html", "text/html", false, processor);
+    //request->send(404); //Sends 404 File Not Found
+    //request->send(200, "text/plain", "Hello World!");
+    request->send(SPIFFS, "/index.html", "text/html", false, processor);
 }
 
 void initWebServer() {
