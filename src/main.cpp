@@ -158,7 +158,6 @@ void setup() {
     initWiFi();
     initWebSocket();
     initWebServer();
-
 }
 
 void loop() {
