@@ -70,6 +70,7 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 AsyncWebServer server(HTTP_PORT);
+AsyncWebSocket ws("/ws");
 
 // SPIFFS
 void initSPIFFS() {
@@ -115,6 +116,32 @@ void initWebServer() {
     server.begin();
 }
 
+// Web Socket Setup
+void onEvent(AsyncWebSocket       *server,  //
+             AsyncWebSocketClient *client,  //
+             AwsEventType          type,    // the signature of this function is defined
+             void                 *arg,     // by the `AwsEventHandler` interface
+             uint8_t              *data,    //
+             size_t                len) {   //
+
+    switch (type) {
+        case WS_EVT_CONNECT:
+            Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+            break;
+        case WS_EVT_DISCONNECT:
+            Serial.printf("WebSocket client #%u disconnected\n", client->id());
+            break;
+        case WS_EVT_DATA:
+        case WS_EVT_PONG:
+        case WS_EVT_ERROR:
+            break;
+    }
+}
+void initWebSocket() {
+    ws.onEvent(onEvent);
+    server.addHandler(&ws);
+}
+
 void setup() {
     pinMode(onboard_led.pin,  OUTPUT);
     pinMode(led1.pin,         OUTPUT);
@@ -125,6 +152,7 @@ void setup() {
     Serial.begin(9600); delay(500);
     initSPIFFS();
     initWiFi();
+    initWebSocket();
     initWebServer();
 
 }
