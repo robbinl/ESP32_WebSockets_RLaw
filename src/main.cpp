@@ -65,10 +65,8 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 // WiFi credentials
-//const char *WIFI_SSID = "OldRob";
-//const char *WIFI_PASS = "5223qaz7542PLM";
-const char *WIFI_SSID = "";
-const char *WIFI_PASS = "";
+char WIFI_SSID[20];
+char WIFI_PASS[20];
 
 // SPIFFS
 void readFileSSID(fs::FS &fs, const char * path){
@@ -78,18 +76,10 @@ void readFileSSID(fs::FS &fs, const char * path){
         Serial.println("- failed to open file for reading");
         return;
     }
-    char buffer[64];
     while (file.available()) {
-        int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
-        buffer[l] = 0;
+        int l = file.readBytesUntil('\n', WIFI_SSID, sizeof(WIFI_SSID));
+        WIFI_SSID[l] = '\0';
     }
-    //if(variable == "SSID"){
-        WIFI_SSID = buffer;
-        Serial.println(WIFI_SSID);
-    //}else if (variable == "PASS"){
-        //WIFI_PASS = buffer;
-        //Serial.println(WIFI_PASS);
-    //}
     file.close();
 }
 
@@ -100,18 +90,10 @@ void readFilePASS(fs::FS &fs, const char * path){
         Serial.println("- failed to open file for reading");
         return;
     }
-    char buffer[64];
     while (file.available()) {
-        int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
-        buffer[l] = 0;
+        int l = file.readBytesUntil('\0', WIFI_PASS, sizeof(WIFI_PASS));
+        WIFI_PASS[l] = '\0';
     }
-    //if(variable == "SSID"){
-        //WIFI_SSID = buffer;
-        //Serial.println(WIFI_SSID);
-    //}else if (variable == "PASS"){
-        WIFI_PASS = buffer;
-        Serial.println(WIFI_PASS);
-    //}
     file.close();
 }
 
