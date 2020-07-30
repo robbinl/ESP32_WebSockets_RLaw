@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <FS.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h> // we need this lib in platformio.ini
@@ -11,10 +12,6 @@
 #define HTTP_PORT 80 // Web Server Setup
 
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
-
-// WiFi credentials
-const char *WIFI_SSID = "OldRob";
-const char *WIFI_PASS = "5223qaz7542PLM";
 
 // LED
 struct Led {
@@ -71,7 +68,39 @@ Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 AsyncWebServer server(HTTP_PORT);
 
+// WiFi credentials
+char WIFI_SSID[20];
+char WIFI_PASS[20];
+
 // SPIFFS
+void readFileSSID(fs::FS &fs, const char * path){
+    Serial.printf("Reading file: %s\r\n", path);
+    File file = fs.open(path);
+    if(!file || file.isDirectory()){
+        Serial.println("- failed to open file for reading");
+        return;
+    }
+    while (file.available()) {
+        int l = file.readBytesUntil('\n', WIFI_SSID, sizeof(WIFI_SSID));
+        WIFI_SSID[l] = '\0';
+    }
+    file.close();
+}
+
+void readFilePASS(fs::FS &fs, const char * path){
+    Serial.printf("Reading file: %s\r\n", path);
+    File file = fs.open(path);
+    if(!file || file.isDirectory()){
+        Serial.println("- failed to open file for reading");
+        return;
+    }
+    while (file.available()) {
+        int l = file.readBytesUntil('\0', WIFI_PASS, sizeof(WIFI_PASS));
+        WIFI_PASS[l] = '\0';
+    }
+    file.close();
+}
+
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");
@@ -82,6 +111,8 @@ void initSPIFFS() {
   }
   else{
     Serial.println("SPIFFS volume mounted properly");
+    readFileSSID(SPIFFS, "/ssid.txt");
+    readFilePASS(SPIFFS, "/pass.txt");
   }
 }
 
