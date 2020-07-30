@@ -65,8 +65,10 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 // WiFi credentials
-const char *WIFI_SSID = "OldRob";
-const char *WIFI_PASS = "5223qaz7542PLM";
+//const char *WIFI_SSID = "OldRob";
+//const char *WIFI_PASS = "5223qaz7542PLM";
+const char *WIFI_SSID = "";
+const char *WIFI_PASS = "";
 
 // SPIFFS
 void readFileSSID(fs::FS &fs, const char * path){
@@ -124,7 +126,7 @@ void initSPIFFS() {
   else{
     Serial.println("SPIFFS volume mounted properly");
     readFileSSID(SPIFFS, "/ssid.txt");
-    //readFilePASS(SPIFFS, "/pass.txt");
+    readFilePASS(SPIFFS, "/pass.txt");
   }
 }
 
