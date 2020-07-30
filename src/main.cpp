@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "FS.h"
 #include <SPIFFS.h>
 #include <WiFi.h>
 
@@ -9,10 +10,6 @@
 #define BTN2_PIN   17
 
 const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
-
-// WiFi credentials
-const char *WIFI_SSID = "OldRob";
-const char *WIFI_PASS = "5223qaz7542PLM";
 
 // LED
 struct Led {
@@ -67,7 +64,27 @@ Button button1      = { BTN1_PIN, HIGH, 0, 0 };
 Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
+// WiFi credentials
+const char *WIFI_SSID = "OldRob";
+const char *WIFI_PASS = "5223qaz7542PLM";
+
 // SPIFFS
+void readFile(fs::FS &fs, const char * path){
+    Serial.printf("Reading file: %s\r\n", path);
+
+    File file = fs.open(path);
+    if(!file || file.isDirectory()){
+        Serial.println("- failed to open file for reading");
+        return;
+    }
+
+    Serial.println("- read from file:");
+    while(file.available()){
+        Serial.write(file.read());
+    }
+    file.close();
+}
+
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");
