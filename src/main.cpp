@@ -78,10 +78,13 @@ void readFile(fs::FS &fs, const char * path){
         return;
     }
 
-    Serial.println("- read from file:");
+    //Serial.println("- read from file:");
     while(file.available()){
-        Serial.write(file.read());
+        WIFI_SSID += file.read();
+        //Serial.write(file.read());
     }
+    Serial.println(WIFI_SSID);
+    //return (file.read());
     file.close();
 }
 
@@ -95,6 +98,7 @@ void initSPIFFS() {
   }
   else{
     Serial.println("SPIFFS volume mounted properly");
+    readFile(SPIFFS, "/ssid.txt");
   }
 }
 
