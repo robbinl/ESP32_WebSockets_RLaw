@@ -65,7 +65,7 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 // WiFi credentials
-const char *WIFI_SSID = "";
+const char *WIFI_SSID = "OldRob";
 const char *WIFI_PASS = "5223qaz7542PLM";
 
 // SPIFFS
