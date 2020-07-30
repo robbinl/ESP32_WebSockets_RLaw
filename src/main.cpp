@@ -95,7 +95,7 @@ void readFilePASS(fs::FS &fs, const char * path){
         return;
     }
     while (file.available()) {
-        int l = file.readBytesUntil('\0', WIFI_PASS, sizeof(WIFI_PASS));
+        int l = file.readBytesUntil('\n', WIFI_PASS, sizeof(WIFI_PASS));
         WIFI_PASS[l] = '\0';
     }
     file.close();
