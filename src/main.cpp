@@ -66,38 +66,28 @@ Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 // WiFi credentials
 const char *WIFI_SSID = "";
-//String WIFI_SSID;
-const char *WIFI_PASS = "5223qaz7542PLM";
+const char *WIFI_PASS = "";
 
 // SPIFFS
-void readFile(fs::FS &fs, const char * path){
+void readFile(fs::FS &fs, const char * path, const char * variable){
     Serial.printf("Reading file: %s\r\n", path);
-
     File file = fs.open(path);
     if(!file || file.isDirectory()){
         Serial.println("- failed to open file for reading");
         return;
     }
-
     char buffer[64];
-while (file.available()) {
- int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
- buffer[l] = 0;
- Serial.println(buffer);
-}
-WIFI_SSID = buffer;
-    //Serial.println("- read from file:");
-    //String WIFI_SSID1;
-    //String WIFI_SSID1 = file.readString();
-    //WIFI_SSID = WIFI_SSID1.c_str();
-    //while(file.available()){
-        //WIFI_SSID1 += char(file.read());
-        //Serial.write(file.read());
-    //}
-    //Serial.print(WIFI_SSID);
-    //Serial.print("end");
-    //WIFI_SSID = WIFI_SSID1.c_str();
-    //return (file.read());
+    while (file.available()) {
+        int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
+        buffer[l] = 0;
+    }
+    if(variable == "SSID"){
+        WIFI_SSID = buffer;
+        Serial.println(WIFI_SSID);
+    }else if (variable == "PASS"){
+        WIFI_PASS = buffer;
+        Serial.println(WIFI_PASS);
+    }
     file.close();
 }
 
@@ -111,7 +101,8 @@ void initSPIFFS() {
   }
   else{
     Serial.println("SPIFFS volume mounted properly");
-    readFile(SPIFFS, "/ssid.txt");
+    readFile(SPIFFS, "/ssid.txt", "SSID");
+    readFile(SPIFFS, "/pass.txt", "PASS");
   }
 }
 
