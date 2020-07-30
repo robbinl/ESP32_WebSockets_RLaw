@@ -78,7 +78,7 @@ void readFileSSID(fs::FS &fs, const char * path){
     }
     char buffer[64];
     while (file.available()) {
-        int l = file.readBytesUntil('\r', buffer, sizeof(buffer));
+        int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
         buffer[l] = 0;
     }
     //if(variable == "SSID"){
