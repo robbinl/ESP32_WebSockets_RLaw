@@ -65,7 +65,8 @@ Led    led2        = { LED2_PIN, false };
 Button button2      = { BTN2_PIN, HIGH, 0, 0 };
 
 // WiFi credentials
-const char *WIFI_SSID = "OldRob";
+const char *WIFI_SSID = "";
+//String WIFI_SSID;
 const char *WIFI_PASS = "5223qaz7542PLM";
 
 // SPIFFS
@@ -78,12 +79,24 @@ void readFile(fs::FS &fs, const char * path){
         return;
     }
 
+    char buffer[64];
+while (file.available()) {
+ int l = file.readBytesUntil('\n', buffer, sizeof(buffer));
+ buffer[l] = 0;
+ Serial.println(buffer);
+}
+WIFI_SSID = buffer;
     //Serial.println("- read from file:");
-    while(file.available()){
-        WIFI_SSID += file.read();
+    //String WIFI_SSID1;
+    //String WIFI_SSID1 = file.readString();
+    //WIFI_SSID = WIFI_SSID1.c_str();
+    //while(file.available()){
+        //WIFI_SSID1 += char(file.read());
         //Serial.write(file.read());
-    }
-    Serial.println(WIFI_SSID);
+    //}
+    //Serial.print(WIFI_SSID);
+    //Serial.print("end");
+    //WIFI_SSID = WIFI_SSID1.c_str();
     //return (file.read());
     file.close();
 }
