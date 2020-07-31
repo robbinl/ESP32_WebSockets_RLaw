@@ -5,6 +5,7 @@ window.addEventListener('load', onLoad);
 
 function onLoad(event) {
     initWebSocket();
+    initButton();
 }
 
 function initWebSocket() {
@@ -28,4 +29,12 @@ function onMessage(event) {
     console.log(`Received a notification from ${event.origin}`);
     console.log(event);
     document.getElementById('led').className = event.data;
+}
+
+function initButton() {
+    document.getElementById('toggle').addEventListener('click', onToggle);
+}
+
+function onToggle(event) {
+    websocket.send('toggle');
 }
