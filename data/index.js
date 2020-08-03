@@ -16,6 +16,7 @@ function initWebSocket() {
 
 function onOpen(event) {
     console.log('Connection opened');
+    console.log(websocket.recv());
 }
 
 function onClose(event) {
