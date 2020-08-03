@@ -9,7 +9,7 @@ function onLoad(event) {
 }
 
 function initWebSocket() {
-    console.log('Trying to open a WebSocket connection with...');
+    console.log('Trying to open a WebSocket connection to...');
     console.log(gateway);
     websocket = new WebSocket(gateway);
     websocket.onopen  = onOpen;
@@ -27,7 +27,7 @@ function onClose(event) {
 }
 
 function onMessage(event) {
-    console.log(`Received a notification from ${event.origin}`);
+    console.log(`Received a message from ${event.origin}`);
     console.log(event);
     document.getElementById('led').className = event.data;
 }
@@ -37,5 +37,6 @@ function initButton() {
 }
 
 function onToggle(event) {
+    console.log(`Sending the toggle message to esp32`);
     websocket.send('toggle');
 }
