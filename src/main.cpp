@@ -149,6 +149,7 @@ void initWebServer() {
 // Web Socket Setup
 // and Data Exchange
 void notifyClients() {
+    Serial.printf("Notifying all clients of LED status\n");
     ws.textAll(led1.on ? "on" : "off");
 }
 
