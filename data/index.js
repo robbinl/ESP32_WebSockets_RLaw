@@ -42,5 +42,5 @@ function initButton() {
 function onToggle(event) {
     console.log(`Sending the toggle message to esp32`);
     //websocket.send('toggle');
-    websocket.send(JSON.stringify({'action':'toggle'}));
+    websocket.send(JSON.stringify({'action':'toggle', 'othermessage':'hi'}));
 }

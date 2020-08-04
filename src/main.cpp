@@ -153,10 +153,10 @@ void notifyClients() {
     Serial.printf("Notifying all clients of LED status\n");
     const uint8_t size = JSON_OBJECT_SIZE(2);
     StaticJsonDocument<size> json;
-    json["status"] = led1.on ? "on" : "off";
-    json["othermessage"] = "hi";
+    json["led1status"] = led1.on ? "on" : "off";
+    json["led2status"] = led2.on ? "led2ON" : "led2OFF";
 
-    char data[50];
+    char data[100];
     size_t len = serializeJson(json, data);
     ws.textAll(data, len);
 }
@@ -165,7 +165,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     AwsFrameInfo *info = (AwsFrameInfo*)arg;
     if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
 
-        const uint8_t size = JSON_OBJECT_SIZE(1);
+        const uint8_t size = JSON_OBJECT_SIZE(2);
         StaticJsonDocument<size> json;
         DeserializationError err = deserializeJson(json, data);
         if (err) {
@@ -175,10 +175,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         }
 
         const char *action = json["action"];
+        Serial.print(action);
         if (strcmp(action, "toggle") == 0) {
             led1.on = !led1.on;
             notifyClients();
         }
+        const char *othermess = json["othermessage"];
+        Serial.print(othermess);
     }
 }
 
