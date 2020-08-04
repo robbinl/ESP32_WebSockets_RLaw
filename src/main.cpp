@@ -2,6 +2,7 @@
 #include <SPIFFS.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h> // we need this lib in platformio.ini
+#include <ArduinoJson.h>
 
 #define LED_ONBOARD_PIN   2
 #define LED1_PIN   25
@@ -147,17 +148,32 @@ void initWebServer() {
 }
 
 // Web Socket Setup
-// and Data Exchange
+// and Data Exchange with JSON
 void notifyClients() {
-    Serial.printf("Notifying all clients of LED status\n");
-    ws.textAll(led1.on ? "on" : "off");
+    const uint8_t size = JSON_OBJECT_SIZE(1);
+    StaticJsonDocument<size> json;
+    json["status"] = led1.on ? "on" : "off";
+
+    char data[17];
+    size_t len = serializeJson(json, data);
+    ws.textAll(data, len);
 }
 
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     AwsFrameInfo *info = (AwsFrameInfo*)arg;
     if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-        data[len] = 0;
-        if (strcmp((char*)data, "toggle") == 0) {
+
+        const uint8_t size = JSON_OBJECT_SIZE(1);
+        StaticJsonDocument<size> json;
+        DeserializationError err = deserializeJson(json, data);
+        if (err) {
+            Serial.print(F("deserializeJson() failed with code "));
+            Serial.println(err.c_str());
+            return;
+        }
+
+        const char *action = json["action"];
+        if (strcmp(action, "toggle") == 0) {
             led1.on = !led1.on;
             notifyClients();
         }
