@@ -151,11 +151,12 @@ void initWebServer() {
 // and Data Exchange with JSON
 void notifyClients() {
     Serial.printf("Notifying all clients of LED status\n");
-    const uint8_t size = JSON_OBJECT_SIZE(1);
+    const uint8_t size = JSON_OBJECT_SIZE(2);
     StaticJsonDocument<size> json;
     json["status"] = led1.on ? "on" : "off";
+    json["othermessage"] = "hi";
 
-    char data[17];
+    char data[50];
     size_t len = serializeJson(json, data);
     ws.textAll(data, len);
 }
