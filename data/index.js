@@ -9,7 +9,8 @@ function onLoad(event) {
 }
 
 function initWebSocket() {
-    console.log('Trying to open a WebSocket connection...');
+    console.log('Trying to open a WebSocket connection to...');
+    console.log(gateway);
     websocket = new WebSocket(gateway);
     websocket.onopen  = onOpen;
     websocket.onclose = onClose;
