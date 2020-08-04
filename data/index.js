@@ -31,6 +31,7 @@ function onMessage(event) {
     console.log(event);
     //document.getElementById('led').className = event.data;
     let data = JSON.parse(event.data);
+    console.log(data);
     document.getElementById('led').className = data.status;
 }
 
