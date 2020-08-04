@@ -37,5 +37,6 @@ function initButton() {
 }
 
 function onToggle(event) {
+    console.log(`Sending the toggle message to esp32`);
     websocket.send('toggle');
 }
