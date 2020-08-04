@@ -29,7 +29,9 @@ function onClose(event) {
 function onMessage(event) {
     console.log(`Received a message from ${event.origin}`);
     console.log(event);
-    document.getElementById('led').className = event.data;
+    //document.getElementById('led').className = event.data;
+    let data = JSON.parse(event.data);
+    document.getElementById('led').className = data.status;
 }
 
 function initButton() {
@@ -38,5 +40,6 @@ function initButton() {
 
 function onToggle(event) {
     console.log(`Sending the toggle message to esp32`);
-    websocket.send('toggle');
+    //websocket.send('toggle');
+    websocket.send(JSON.stringify({'action':'toggle'}));
 }
