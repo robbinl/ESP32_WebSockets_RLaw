@@ -32,7 +32,7 @@ function onMessage(event) {
     //document.getElementById('led').className = event.data;
     let data = JSON.parse(event.data);
     console.log(data);
-    document.getElementById('led').className = data.status;
+    document.getElementById('led').className = data.led1status;
 }
 
 function initButton() {

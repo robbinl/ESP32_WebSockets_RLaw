@@ -175,13 +175,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         }
 
         const char *action = json["action"];
-        Serial.print(action);
+        Serial.println(action);
         if (strcmp(action, "toggle") == 0) {
             led1.on = !led1.on;
             notifyClients();
         }
         const char *othermess = json["othermessage"];
-        Serial.print(othermess);
+        Serial.println(othermess);
     }
 }
 
