@@ -150,6 +150,7 @@ void initWebServer() {
 // Web Socket Setup
 // and Data Exchange with JSON
 void notifyClients() {
+    Serial.printf("Notifying all clients of LED status\n");
     const uint8_t size = JSON_OBJECT_SIZE(1);
     StaticJsonDocument<size> json;
     json["status"] = led1.on ? "on" : "off";
