@@ -37,20 +37,22 @@ function onMessage(event) {
 
 function initButton() {
     document.getElementById('toggle').addEventListener('click', onToggle);
-    document.getElementById('Button2').addEventListener('mousedown', mouseDown);
-    document.getElementById('Button2').addEventListener('mouseup', mouseUp);
+    document.getElementById('button2').addEventListener('mousedown', mouseDown);
+    document.getElementById('button2').addEventListener('mouseup', mouseUp);
 }
 
 function onToggle(event) {
     console.log(`Sending the toggle message to esp32`);
     //websocket.send('toggle');
-    websocket.send(JSON.stringify({'action':'toggle', 'Button2Status' : 'none'}));
+    websocket.send(JSON.stringify({'action':'toggle', 'button2status' : 'none'}));
 }
 
 function mouseDown(event) {
-    websocket.send(JSON.stringify({'action':'none', 'Button2Status' : 'down'}));
+    console.log(`Sending the mousedown message to esp32`);
+    websocket.send(JSON.stringify({'action':'none', 'button2status' : 'down'}));
 }
 
 function mouseUp(event) {
-    websocket.send(JSON.stringify({'action':'none', 'Button2Status' : 'up'}));
+    console.log(`Sending the mouseup message to esp32`);
+    websocket.send(JSON.stringify({'action':'none', 'button2status' : 'up'}));
 }

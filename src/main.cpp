@@ -154,7 +154,7 @@ void notifyClients() {
     const uint8_t size = JSON_OBJECT_SIZE(2);
     StaticJsonDocument<size> json;
     json["led1status"] = led1.on ? "on" : "off";
-    json["led2status"] = led2.on ? "led2ON" : "led2OFF";
+    json["led2status"] = led2.on ? "on" : "off";
 
     char data[100];
     size_t len = serializeJson(json, data);
@@ -180,7 +180,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
             led1.on = !led1.on;
             notifyClients();
         }
-        const char *button2status = json["Button2Status"];
+        const char *button2status = json["button2status"];
         Serial.println(button2status);
         if (strcmp(button2status, "down") == 0) {
             led2.on = true;
