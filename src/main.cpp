@@ -282,10 +282,14 @@ void loop()
         notifyClients();
     }
     button2.read();
-    if (button2.held())
+    if (button2.pressed())
     {
         led2.on = true;
         notifyClients();
+    }
+    else if (button2.held())
+    {
+        led2.on = true;
     }
     else if (button2.released())
     {
