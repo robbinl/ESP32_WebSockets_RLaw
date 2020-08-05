@@ -49,11 +49,34 @@ h1 {
   background-image: radial-gradient(farthest-corner at 50% 20%, #b30000 0%, #330000 100%);
   box-shadow: 0 0.5em 1em rgba(102, 0, 0, 0.3);
 }
+#led2 {
+  position: relative;
+  width: 5em;
+  height: 5em;
+  border: 2px solid #000;
+  border-radius: 2.5em;
+  background-image: radial-gradient(farthest-corner at 50% 20%, #b30000 0%, #330000 100%);
+  box-shadow: 0 0.5em 1em rgba(102, 0, 0, 0.3);
+}
 #led.on {
   background-image: radial-gradient(farthest-corner at 50% 75%, red 0%, #990000 100%);
   box-shadow: 0 1em 1.5em rgba(255, 0, 0, 0.5);
 }
+#led2.on {
+  background-image: radial-gradient(farthest-corner at 50% 75%, red 0%, #990000 100%);
+  box-shadow: 0 1em 1.5em rgba(255, 0, 0, 0.5);
+}
 #led:after {
+  content: '';
+  position: absolute;
+  top: .3em;
+  left: 1em;
+  width: 60%;
+  height: 40%;
+  border-radius: 60%;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+}
+#led2:after {
   content: '';
   position: absolute;
   top: .3em;
