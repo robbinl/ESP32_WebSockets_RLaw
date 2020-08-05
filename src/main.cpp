@@ -180,8 +180,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
             led1.on = !led1.on;
             notifyClients();
         }
-        const char *othermess = json["othermessage"];
-        Serial.println(othermess);
+        const char *button2status = json["Button2Status"];
+        Serial.println(button2status);
     }
 }
 
