@@ -182,6 +182,14 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         }
         const char *button2status = json["Button2Status"];
         Serial.println(button2status);
+        if (strcmp(button2status, "down") == 0) {
+            led2.on = true;
+            notifyClients();
+        }
+        if (strcmp(button2status, "up") == 0) {
+            led2.on = false;
+            notifyClients();
+        }
     }
 }
 
