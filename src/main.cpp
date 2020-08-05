@@ -240,11 +240,11 @@ void loop() {
     button1.read();
     if (button1.pressed()) {
         led1.on = !led1.on;
-        notifyClients();
     }
     button2.read();
          if (button2.held())     led2.on = true;
     else if (button2.released()) led2.on = false;
+    notifyClients();
     led1.update();
     led2.update();
     onboard_led.on = millis() % 2000 < 1000;
