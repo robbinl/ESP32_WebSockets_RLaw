@@ -155,7 +155,7 @@ void initWiFi()
 // Web Server Setup
 String processor(const String &var)
 {
-    if (var == "STATE")
+    if (var == "STATEd")
         return (led1.on ? "on" : "off");
     return String();
 }
@@ -237,6 +237,7 @@ void onEvent(AsyncWebSocket *server,       //
     {
     case WS_EVT_CONNECT:
         Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+        notifyClients();
         break;
     case WS_EVT_DISCONNECT:
         Serial.printf("WebSocket client #%u disconnected\n", client->id());
@@ -246,6 +247,7 @@ void onEvent(AsyncWebSocket *server,       //
         handleWebSocketMessage(arg, data, len);
         break;
     case WS_EVT_PONG:
+        Serial.printf("Handleing ping from client #%u\n", client->id());
     case WS_EVT_ERROR:
         break;
     }
